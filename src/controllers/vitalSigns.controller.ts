@@ -3,7 +3,7 @@ import { Patient, VitalSigns } from "../models/index";
 
 export const listVitalSigns = async (req: Request, res: Response) => {
   try {
-    const { patientId } = req.body as { patientId: string };
+    const patientId = req.params["patientId"] as string;
 
     const patient = await Patient.findByPk(patientId);
 
@@ -24,8 +24,15 @@ export const listVitalSigns = async (req: Request, res: Response) => {
 
 export const createVitalSigns = async (req: Request, res: Response) => {
   try {
+    const patientId = req.params["patientId"] as string;
+
+    const patient = await Patient.findByPk(patientId);
+
+    if (!patient) {
+      return res.status(404).json({ error: `Patient with id '${patientId}' not found.` });
+    }
+
     const {
-      patientId,
       heartRate,
       respiratoryRate,
       oxygenSaturation,
@@ -33,7 +40,6 @@ export const createVitalSigns = async (req: Request, res: Response) => {
       bloodPressureDiastolic,
       temperature,
     } = req.body as {
-      patientId: string;
       heartRate: number;
       respiratoryRate: number;
       oxygenSaturation: number;
@@ -41,12 +47,6 @@ export const createVitalSigns = async (req: Request, res: Response) => {
       bloodPressureDiastolic: number;
       temperature: number;
     };
-
-    const patient = await Patient.findByPk(patientId);
-
-    if (!patient) {
-      return res.status(404).json({ error: `Patient with id '${patientId}' not found.` });
-    }
 
     const vitals = await VitalSigns.create({
       patientId,

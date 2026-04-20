@@ -18,7 +18,7 @@ import vitalSignsRouter from "./vitalSigns.routes";
 
 const router = Router();
 
-router.use("/vitals", vitalSignsRouter);
+router.use("/:patientId/vitals", vitalSignsRouter);
 
 router.get("/", listPatientsValidator, validate, listPatients);
 router.post("/find", getPatientValidator, validate, getPatient);

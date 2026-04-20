@@ -194,31 +194,26 @@ DELETE /api/patients
 
 ---
 
-### Vital Signs — `/api/patients/vitals`
+### Vital Signs — `/api/patients/:patientId/vitals`
 
 #### List vital signs history
 ```
-GET /api/patients/vitals
+GET /api/patients/:patientId/vitals
 ```
 
-**Body**
-```json
-{ "patientId": "uuid" }
-```
-
-**Response `200`** — Array of vital sign records ordered by most recent.
+**Response `200`** — Array of vital sign records ordered by most recent.  
+**Response `404`** — Patient not found.
 
 ---
 
 #### Record new vital signs
 ```
-POST /api/patients/vitals
+POST /api/patients/:patientId/vitals
 ```
 
 **Body**
 ```json
 {
-  "patientId": "uuid",
   "heartRate": 72,
   "respiratoryRate": 16,
   "oxygenSaturation": 98,

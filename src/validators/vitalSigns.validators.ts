@@ -1,13 +1,12 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
-const patientIdField = body("patientId")
-  .notEmpty().withMessage("patientId is required.")
+const patientIdParam = param("patientId")
   .isUUID().withMessage("patientId must be a valid UUID.");
 
-export const listVitalSignsValidator = [patientIdField];
+export const listVitalSignsValidator = [patientIdParam];
 
 export const createVitalSignsValidator = [
-  patientIdField,
+  patientIdParam,
   body("heartRate")
     .notEmpty().withMessage("heartRate is required.")
     .isInt({ min: 0, max: 300 }).withMessage("heartRate must be an integer between 0 and 300."),
