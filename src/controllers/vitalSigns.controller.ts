@@ -1,7 +1,7 @@
-import type { Request, Response } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { Patient, VitalSigns } from "../models/index";
 
-export const listVitalSigns = async (req: Request, res: Response) => {
+export const listVitalSigns = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const patientId = req.params["patientId"] as string;
 
@@ -18,11 +18,11 @@ export const listVitalSigns = async (req: Request, res: Response) => {
 
     return res.status(200).json(vitals);
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 };
 
-export const createVitalSigns = async (req: Request, res: Response) => {
+export const createVitalSigns = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const patientId = req.params["patientId"] as string;
 
@@ -59,10 +59,7 @@ export const createVitalSigns = async (req: Request, res: Response) => {
     });
 
     return res.status(201).json(vitals);
-  } catch (error: any) {
-    if (error.name === "SequelizeValidationError") {
-      return res.status(400).json({ error: error.errors.map((e: any) => e.message) });
-    }
-    return res.status(500).json({ error: "Internal server error" });
+  } catch (error) {
+    next(error);
   }
 };

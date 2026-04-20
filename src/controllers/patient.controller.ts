@@ -1,7 +1,7 @@
-import type { Request, Response } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { Patient, VitalSigns } from "../models/index";
 
-export const listPatients = async (req: Request, res: Response) => {
+export const listPatients = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { status, page = "1", limit = "10" } = req.query;
 
@@ -29,11 +29,11 @@ export const listPatients = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 };
 
-export const getPatient = async (req: Request, res: Response) => {
+export const getPatient = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.body as { id: string };
 
@@ -47,25 +47,22 @@ export const getPatient = async (req: Request, res: Response) => {
 
     return res.status(200).json(patient);
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 };
 
-export const createPatient = async (req: Request, res: Response) => {
+export const createPatient = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { fullName, dateOfBirth, gender, medicalHistoryNumber, status } = req.body;
 
     const patient = await Patient.create({ fullName, dateOfBirth, gender, medicalHistoryNumber, status });
     return res.status(201).json(patient);
-  } catch (error: any) {
-    if (error.name === "SequelizeUniqueConstraintError") {
-      return res.status(400).json({ error: "A patient with that medicalHistoryNumber already exists." });
-    }
-    return res.status(500).json({ error: "Internal server error" });
+  } catch (error) {
+    next(error);
   }
 };
 
-export const updatePatient = async (req: Request, res: Response) => {
+export const updatePatient = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id, fullName, dateOfBirth, gender, medicalHistoryNumber, status } = req.body as {
       id: string;
@@ -90,15 +87,12 @@ export const updatePatient = async (req: Request, res: Response) => {
     await patient.update(updates);
 
     return res.status(200).json(patient);
-  } catch (error: any) {
-    if (error.name === "SequelizeUniqueConstraintError") {
-      return res.status(400).json({ error: "A patient with that medicalHistoryNumber already exists." });
-    }
-    return res.status(500).json({ error: "Internal server error" });
+  } catch (error) {
+    next(error);
   }
 };
 
-export const deletePatient = async (req: Request, res: Response) => {
+export const deletePatient = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.body as { id: string };
 
@@ -111,6 +105,6 @@ export const deletePatient = async (req: Request, res: Response) => {
     await patient.destroy();
     return res.status(200).json({ message: "Patient deleted successfully." });
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 };

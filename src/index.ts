@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import sequelize from "./config/database";
 import patientRouter from "./routes/patient.routes";
+import { errorHandler } from "./middleware/errorHandler";
 
 dotenv.config();
 
@@ -17,6 +18,8 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/patients", patientRouter);
+
+app.use(errorHandler);
 
 const start = async () => {
   try {
