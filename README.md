@@ -4,7 +4,7 @@ REST API backend for the MedFlow patient management system, built with Node.js, 
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) v18+
+- [Node.js](https://nodejs.org/) v20.19.0+
 - [PostgreSQL](https://www.postgresql.org/) v15+
 
 ## Getting Started
@@ -53,6 +53,14 @@ Syncs the schema and populates it with sample data:
 
 ```bash
 npm run seed
+```
+
+> **Warning:** `seed` drops and recreates all tables. Never run against production data.
+
+### 6. Start the development server
+
+```bash
+npm run dev
 ```
 
 ## Project Structure

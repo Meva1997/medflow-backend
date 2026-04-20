@@ -4,8 +4,13 @@ import type { VitalSignsCreationAttributes } from "../models/VitalSigns";
 import { faker } from "@faker-js/faker";
 
 const seedDatabase = async () => {
+  if (process.env.NODE_ENV === "production") {
+    console.error("ERROR: seed must not run in production — it drops all tables.");
+    process.exit(1);
+  }
+
   try {
-    //! Sync the database but force: true will drop the tables if they already exist and recreate them
+    // force: true drops and recreates all tables — intentional for dev seeding only
     await sequelize.sync({ force: true });
     console.log("Database synced successfully.");
 
